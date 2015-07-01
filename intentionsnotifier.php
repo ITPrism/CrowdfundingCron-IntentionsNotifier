@@ -28,9 +28,6 @@ class plgCrowdfundingCronIntentionsNotifier extends JPlugin
         jimport("Crowdfunding.init");
 
         $period = (!$this->params->get("period", 7)) ? 7 : $this->params->get("period", 7);
-        $options = array(
-            "period" => $period
-        );
 
         $intentions = $this->getIntentions($period);
 
@@ -123,7 +120,7 @@ class plgCrowdfundingCronIntentionsNotifier extends JPlugin
             ->innerJoin($db->quoteName("#__users", "c") . " ON a.user_id = c.id")
             ->innerJoin($db->quoteName("#__categories", "d") . " ON b.catid = d.id")
             ->leftJoin($db->quoteName("#__crowdf_rewards", "e") . " ON a.reward_id = e.id")
-            ->where("a.record_date >= DATE_SUB(NOW(), INTERVAL ".$period." DAY)")
+            ->where("a.record_date <= DATE_SUB(NOW(), INTERVAL ".$period." DAY)")
             ->where("a.user_id > 0");
 
         $db->setQuery($query);
